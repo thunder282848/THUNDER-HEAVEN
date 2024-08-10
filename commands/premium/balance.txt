@@ -1,0 +1,55 @@
+/** @format
+ *
+ * Kyoko By Doubiest
+ * Version: 6.0.0-beta
+ * © 2024 Nemesis-Dev
+ */
+const { ActionRowBuilder } = require("discord.js");
+
+module.exports = {
+  name: "balance",
+  aliases: ["bal"],
+  cooldown: "",
+  category: "owner",
+  usage: "",
+  description: "Check balance",
+  args: false,
+  vote: false,
+  new: false,
+  admin: false,
+  owner: false,
+  botPerms: [],
+  userPerms: [],
+  player: false,
+  queue: false,
+  inVoiceChannel: false,
+  sameVoiceChannel: false,
+  execute: async (client, message, args, emoji) => {
+    let coins = parseInt(
+      (await client.db.coins.get(`${message.author.id}`)) || 0,
+    );
+    const row = new ActionRowBuilder().addComponents(
+      new client.button().link("Click here", client.support),
+    );
+    const m = await message
+      .reply({
+        embeds: [
+          new client.embed()
+            .desc(
+              `**${emoji.coin} You have a total of ${
+                coins || `0`
+              } coins**\n\n` +
+                `**Need coins ? Join the Support Server by clicking the button below !:**\n\n` 
+                
+            )
+
+            .setFooter({
+              text: `This isn't a real but an in-game currency. User discretion is advised.ㅤㅤ`,
+            }),
+            
+        ],
+        components: [row],
+      })
+      .catch(() => {});
+  },
+};
